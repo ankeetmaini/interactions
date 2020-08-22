@@ -63,7 +63,6 @@ export default function App() {
                   ? {
                       filter: "grayscale(0)",
                       opacity: 1,
-                      transform: "scale(1.3)",
                     }
                   : {}
               }
