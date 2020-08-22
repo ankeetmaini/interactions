@@ -78,39 +78,34 @@ export default function App() {
       <article className="main" style={{}}>
         <AnimatePresence>
           <motion.div
+            layoutId={pos + prev}
             className="prev"
-            initial={{ x: 0, scale: 0 }}
+            initial={{ x: 0 }}
             animate={{
-              scale: [0.1, 0.6],
-              left: 140,
-
+              scale: [1, 0.9, 0.7, 0.6],
+              x: -400,
               filter: "grayscale()",
             }}
-            transition={{ duration: 1.4 }}
+            transition={{ duration: 0.8 }}
             key={pos + "back"}
-            exit={{scale: 0}}
-          >
-            {prev.map(
-              (c) => c && <div className={`content`}>Prev: {c.text}</div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-        <AnimatePresence>
-          <motion.div
-            className="prev"
-            key={pos + "for"}
-            initial={{ x: -400 }}
-            animate={{ x: 0 }}
-            transition={{ duration: 1.4 }}
             exit={{ scale: 0 }}
           >
-            {current.map((c) => (
-              <div className={`content ${c.demo ? "animate__tada" : ""}`}>
-                Forward: {c.text}
-              </div>
-            ))}
+            {prev.map((c) => c && <div className={`content`}>{c.text}</div>)}
           </motion.div>
         </AnimatePresence>
+
+        <motion.div
+          layoutId={pos}
+          className="prev"
+          key={pos + "for"}
+          initial={{ y: -200 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 1.4 }}
+        >
+          {current.map((c) => (
+            <div className={`content`}>{c.text}</div>
+          ))}
+        </motion.div>
       </article>
     </main>
   );
