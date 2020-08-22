@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./styles.css";
 import { AnimatePresence, motion } from "framer-motion";
-
+import Progress from "./Progress";
 const systems = ["cl", "ui", "wh", "ff"];
 
 const flows = [
@@ -31,7 +31,7 @@ export default function App() {
 
       if (e.key === "ArrowRight") {
         setPos((pos) => {
-          if (pos === flows.length - 1) return 0;
+          if (pos === flows.length - 1) return pos;
           return pos + 1;
         });
       }
@@ -51,7 +51,6 @@ export default function App() {
   const activated = rawSystems.filter(Boolean);
   return (
     <main>
-      <mark>{pos}</mark>
       <article style={{ display: "flex" }}>
         {systems.map((s) => {
           return (
@@ -106,6 +105,7 @@ export default function App() {
           ))}
         </motion.div>
       </article>
+      <Progress total={flows.length - 1} done={pos} />
     </main>
   );
 }
