@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./styles.css";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const systems = ["cl", "ui", "wh", "ff"];
 
@@ -10,13 +10,14 @@ const flows = [
   { text: "this thing also happens", system: "ui" },
   [
     { text: "happens here", system: "cl" },
-    { text: "happens here also", system: "wh" }
+    { text: "happens here also", system: "wh" },
   ],
   { text: "this too", demo: true },
   { text: "and this also" },
   { text: "that was so fancy, IKR!" },
-  { text: "reaches here", system: "cl" }
+  { text: "reaches here", system: "cl" },
 ];
+
 export default function App() {
   const [pos, setPos] = React.useState(0);
   React.useEffect(() => {
@@ -39,14 +40,14 @@ export default function App() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  const prev =
-    pos > 0 && Array.isArray(flows[pos - 1])
-      ? flows[pos - 1]
-      : [flows[pos - 1]];
+  const prev = Array.isArray(flows[pos - 1])
+    ? flows[pos - 1]
+    : [flows[pos - 1]].filter(Boolean);
+
   const current = Array.isArray(flows[pos]) ? flows[pos] : [flows[pos]];
   const rawSystems = Array.isArray(current)
-    ? current.map((c) => c.system)
-    : [current.system];
+    ? current.map((c) => "system" in c && c.system)
+    : ["system" in current && current.system];
   const activated = rawSystems.filter(Boolean);
   return (
     <main>
@@ -62,7 +63,7 @@ export default function App() {
                   ? {
                       filter: "grayscale(0)",
                       opacity: 1,
-                      transform: "scale(1.3)"
+                      transform: "scale(1.3)",
                     }
                   : {}
               }
@@ -75,38 +76,41 @@ export default function App() {
       <hr />
 
       <article className="main" style={{}}>
-        <div key={pos + "back"}>
-          {prev.map(
-            (c) =>
-              c && (
-                <motion.div
-                  className={`content prev`}
-                  initial={{ x: 0, y: "-150%" }}
-                  animate={{
-                    scale: [0.1, 0.6],
-                    left: 140,
-                    y: "-150%",
-                    filter: "grayscale()"
-                  }}
-                  transition={{ duration: 1.4 }}
-                >
-                  {c.text}
-                </motion.div>
-              )
-          )}
-        </div>
-        <div key={pos + "for"}>
-          {current.map((c) => (
-            <motion.div
-              className={`content ${c.demo ? "animate__tada" : ""}`}
-              initial={{ x: -400 }}
-              animate={{ x: 0 }}
-              transition={{ duration: 1.4 }}
-            >
-              {c.text}
-            </motion.div>
-          ))}
-        </div>
+        <AnimatePresence>
+          <motion.div
+            className="prev"
+            initial={{ x: 0, scale: 0 }}
+            animate={{
+              scale: [0.1, 0.6],
+              left: 140,
+
+              filter: "grayscale()",
+            }}
+            transition={{ duration: 1.4 }}
+            key={pos + "back"}
+            exit={{scale: 0}}
+          >
+            {prev.map(
+              (c) => c && <div className={`content`}>Prev: {c.text}</div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+        <AnimatePresence>
+          <motion.div
+            className="prev"
+            key={pos + "for"}
+            initial={{ x: -400 }}
+            animate={{ x: 0 }}
+            transition={{ duration: 1.4 }}
+            exit={{ scale: 0 }}
+          >
+            {current.map((c) => (
+              <div className={`content ${c.demo ? "animate__tada" : ""}`}>
+                Forward: {c.text}
+              </div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </article>
     </main>
   );
