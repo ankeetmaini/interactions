@@ -1,0 +1,31 @@
+.pill {
+  padding: 20px;
+  margin: 6px 20px 6px;
+  font-size: 40px;
+  opacity: 0.4;
+  flex: 1;
+  text-align: center;
+  filter: grayscale();
+  transition: transform 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.content {
+  max-width: 300px;
+  text-align: center;
+  padding: 6px;
+  color: black;
+  font-size: 24px;
+  background: #f9c412;
+  margin: 50px 4px 50px 4px;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 200px);
+}
+
+.prev {
+  position: absolute;
+}
